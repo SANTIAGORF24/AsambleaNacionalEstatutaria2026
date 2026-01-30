@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* CNCU Design tokens - white and blue */
+:root {
+  --background: #ffffff;
+  --foreground: #11357b;
+  --card: #ffffff;
+  --card-foreground: #11357b;
+  --popover: #ffffff;
+  --popover-foreground: #11357b;
+  --primary: #11357b;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f4f8;
+  --secondary-foreground: #11357b;
+  --muted: #e8eef5;
+  --muted-foreground: #5a6f8a;
+  --accent: #11357b;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #d1dbe8;
+  --input: #e8eef5;
+  --ring: #11357b;
+  --radius: 0.5rem;
+  --sidebar: #11357b;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #11357b;
+  --sidebar-accent: #1a4a9e;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1a4a9e;
+  --sidebar-ring: #ffffff;
+}
+
+@theme inline {
+  /* Updated font-sans and font-mono to use IBM Plex */
+  --font-sans: "IBM Plex Sans", "IBM Plex Sans Fallback", sans-serif;
+  --font-mono: "IBM Plex Mono", "IBM Plex Mono Fallback", monospace;
+  --font-display: "Bebas Neue", "Bebas Neue Fallback", sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+    scrollbar-width: thin;
+    scrollbar-color: #11357b #e8eef5;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+    max-width: 100vw;
+    scrollbar-width: thin;
+    scrollbar-color: #11357b #e8eef5;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 10px;
+  }
+  html::-webkit-scrollbar-track,
+  body::-webkit-scrollbar-track {
+    background: #e8eef5;
+  }
+  html::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb {
+    background: #11357b;
+    border-radius: 4px;
+  }
+  html::-webkit-scrollbar-thumb:hover,
+  body::-webkit-scrollbar-thumb:hover {
+    background: #1a4a9e;
+  }
+}
+
+/* Custom noise texture overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Grid background pattern */
+.grid-bg {
+  background-image: linear-gradient(to right, oklch(0.2 0 0) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.2 0 0) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Custom selection color */
+::selection {
+  background: #11357b;
+  color: #ffffff;
+}
