@@ -15,7 +15,7 @@ const formatearTexto = (texto: string): string => {
 }
 
 export default function LandingPage() {
-  const [currentView, setCurrentView] = useState<'info' | 'form'>('info')
+  const [currentView, setCurrentView] = useState<'info' | 'agenda' | 'form'>('info')
   const [showContent, setShowContent] = useState(false)
   const [formData, setFormData] = useState({
     nombreCompleto: "",
@@ -37,10 +37,6 @@ export default function LandingPage() {
     const timer = setTimeout(() => setShowContent(true), 800)
     return () => clearTimeout(timer)
   }, [])
-
-  const handleShowForm = () => {
-    setCurrentView('form')
-  }
 
   const validateNombreCompleto = (value: string): string => {
     if (!value.trim()) return "El nombre es requerido"
@@ -290,13 +286,195 @@ export default function LandingPage() {
                         transition={{ delay: 0.8, duration: 0.5 }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={handleShowForm}
+                        onClick={() => setCurrentView('agenda')}
                         className="w-full bg-[#11357b] text-white py-4 px-6 rounded-xl font-bold text-lg hover:bg-[#0d2a5a] transition-all duration-200 shadow-lg hover:shadow-xl"
                       >
-                        Registrarme para la Asamblea
+                        Ver Orden del Día
                       </motion.button>
                     </div>
                   </div>
+                </motion.div>
+              </>
+            ) : currentView === 'agenda' ? (
+              // Vista del Orden del Día
+              <>
+                {/* Header with Logo */}
+                <div className="bg-white px-8 pt-8 pb-6">
+                  <div className="flex flex-col items-center">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setCurrentView('info')}
+                      className="self-start mb-4 flex items-center gap-2 text-[#11357b]/60 hover:text-[#11357b] transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      <span className="text-sm font-medium">Volver</span>
+                    </motion.button>
+                    
+                    <Image
+                      src="/logooooo.webp"
+                      alt="Colegio Nacional de Curadores Urbanos"
+                      width={160}
+                      height={120}
+                      priority
+                      className="w-auto h-auto max-w-[160px]"
+                    />
+                  </div>
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="px-6 pb-8 max-h-[60vh] overflow-y-auto"
+                >
+                  <h2 className="text-2xl font-bold text-[#11357b] text-center mb-6">ORDEN DEL DÍA</h2>
+                  
+                  {/* Viernes 20 de marzo */}
+                  <div className="mb-6">
+                    <div className="bg-[#11357b] text-white py-2 px-4 rounded-lg mb-4">
+                      <h3 className="font-bold text-center">Viernes 20 de marzo</h3>
+                    </div>
+                    
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between items-start border-b border-[#11357b]/10 pb-2">
+                        <span className="text-[#11357b] font-medium">Registro de Asistencia</span>
+                        <span className="text-[#11357b]/70 font-semibold">8:00 a.m.</span>
+                      </div>
+                      
+                      {/* Sección I - Instalación */}
+                      <div className="bg-[#11357b]/5 rounded-lg p-3 mt-4">
+                        <h4 className="font-bold text-[#11357b] mb-3">I. INSTALACIÓN</h4>
+                        
+                        <div className="space-y-3">
+                          <div className="border-b border-[#11357b]/10 pb-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-semibold text-[#11357b]">Colegio Nacional de Curadores Urbanos</p>
+                                <p className="text-[#11357b]/70 text-xs">Arq. William Taboada Díaz</p>
+                                <p className="text-[#11357b]/50 text-xs">Presidente</p>
+                              </div>
+                              <span className="text-[#11357b]/70 font-semibold">8:30 a.m.</span>
+                            </div>
+                          </div>
+                          
+                          <div className="border-b border-[#11357b]/10 pb-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-semibold text-[#11357b]">Min. de Vivienda, Ciudad y Territorio</p>
+                                <p className="text-[#11357b]/70 text-xs">Dra. Aydee Marqueza Marsiglia Bello</p>
+                                <p className="text-[#11357b]/50 text-xs">Viceministra</p>
+                              </div>
+                              <span className="text-[#11357b]/70 font-semibold">8:40 a.m.</span>
+                            </div>
+                          </div>
+                          
+                          <div className="pb-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-semibold text-[#11357b]">Superintendencia de Notariado y Registro</p>
+                                <p className="text-[#11357b]/70 text-xs">Dr. Ricardo Agudelo Sedano</p>
+                                <p className="text-[#11357b]/50 text-xs">Superintendente</p>
+                              </div>
+                              <span className="text-[#11357b]/70 font-semibold">8:50 a.m.</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Sección II - Evento Académico */}
+                      <div className="bg-[#11357b]/5 rounded-lg p-3 mt-4">
+                        <h4 className="font-bold text-[#11357b] mb-3">II. EVENTO ACADÉMICO</h4>
+                        
+                        <div className="space-y-3">
+                          <div className="border-b border-[#11357b]/10 pb-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-semibold text-[#11357b]">Ponencia Min. Vivienda</p>
+                                <p className="text-[#11357b]/50 text-xs">Por confirmar</p>
+                              </div>
+                              <span className="text-[#11357b]/70 font-semibold">9:00 a.m.</span>
+                            </div>
+                          </div>
+                          
+                          <div className="border-b border-[#11357b]/10 pb-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-semibold text-[#11357b]">Ponencia Superintendencia</p>
+                                <p className="text-[#11357b]/50 text-xs">Por confirmar</p>
+                              </div>
+                              <span className="text-[#11357b]/70 font-semibold">9:45 a.m.</span>
+                            </div>
+                          </div>
+                          
+                          <div className="pb-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-semibold text-[#11357b]">Situaciones Administrativas</p>
+                                <p className="text-[#11357b]/50 text-xs">Por confirmar</p>
+                              </div>
+                              <span className="text-[#11357b]/70 font-semibold">10:30 a.m.</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <p className="text-[#11357b]/50 text-xs italic mt-2">* El evento académico está sujeto a modificaciones.</p>
+                      </div>
+                      
+                      {/* Almuerzo */}
+                      <div className="flex justify-between items-center bg-amber-50 rounded-lg p-3 mt-4">
+                        <span className="font-semibold text-[#11357b]">🍽️ Almuerzo de Integración</span>
+                        <span className="text-[#11357b]/70 font-semibold">1:15 p.m.</span>
+                      </div>
+                      
+                      {/* Sección III - Asamblea */}
+                      <div className="bg-[#11357b]/5 rounded-lg p-3 mt-4">
+                        <h4 className="font-bold text-[#11357b] mb-1">III. ASAMBLEA NACIONAL ESTATUTARIA</h4>
+                        <p className="text-[#11357b]/60 text-xs mb-3">Colegio Nacional de Curadores Urbanos - 2:30 p.m.</p>
+                        
+                        <div className="space-y-2 text-xs">
+                          <p className="text-[#11357b]">1. Verificación del Quórum</p>
+                          <p className="text-[#11357b]">2. Aprobación del Orden del Día</p>
+                          <p className="text-[#11357b]">3. Nombramiento Comité, Revisión del Acta Asamblea</p>
+                          <p className="text-[#11357b]">4. Informe Comité aprobación Acta anterior</p>
+                          <p className="text-[#11357b]">5. Informe Junta Directiva</p>
+                          <p className="text-[#11357b]">6. Presentación, aprobación Estados Financieros y presupuesto 2026</p>
+                          <p className="text-[#11357b]">7. Elección de Junta Directiva</p>
+                          <p className="text-[#11357b]">8. Proposiciones y varios</p>
+                        </div>
+                      </div>
+                      
+                      {/* Clausura */}
+                      <div className="flex justify-between items-center border-t border-[#11357b]/20 pt-3 mt-4">
+                        <span className="font-bold text-[#11357b]">CLAUSURA</span>
+                        <span className="text-[#11357b]/70 font-semibold">6:00 p.m.</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Sábado 21 de marzo */}
+                  <div className="mb-6">
+                    <div className="bg-[#11357b] text-white py-2 px-4 rounded-lg mb-4">
+                      <h3 className="font-bold text-center">Sábado 21 de marzo</h3>
+                    </div>
+                    <div className="bg-amber-50 rounded-lg p-4 text-center">
+                      <p className="text-2xl mb-2">🏖️</p>
+                      <p className="font-bold text-[#11357b]">Actividad de Integración</p>
+                      <p className="text-[#11357b]/70 text-sm">Día de Playa</p>
+                    </div>
+                  </div>
+                  
+                  {/* Botón para ir al formulario */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setCurrentView('form')}
+                    className="w-full bg-[#11357b] text-white py-4 px-6 rounded-xl font-bold text-lg hover:bg-[#0d2a5a] transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    Registrarme para la Asamblea
+                  </motion.button>
                 </motion.div>
               </>
             ) : (
@@ -308,7 +486,7 @@ export default function LandingPage() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setCurrentView('info')}
+                      onClick={() => setCurrentView('agenda')}
                       className="self-start mb-4 flex items-center gap-2 text-[#11357b]/60 hover:text-[#11357b] transition-colors"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -395,11 +573,56 @@ export default function LandingPage() {
                         </AnimatePresence>
                       </motion.div>
 
-                      {/* Número de Despacho */}
+                      {/* Municipio o Ciudad */}
                       <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4, duration: 0.4 }}
+                      >
+                        <label className="block text-sm font-semibold text-[#11357b] mb-2">
+                          Municipio o Ciudad
+                        </label>
+                        <div className="relative">
+                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
+                            focusedField === 'municipio' ? 'text-[#11357b]' : 'text-[#11357b]/30'
+                          }`}>
+                            <MapPin className="w-5 h-5" />
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.municipio}
+                            onChange={(e) => handleChange("municipio", e.target.value)}
+                            onFocus={() => setFocusedField('municipio')}
+                            onBlur={() => setFocusedField(null)}
+                            className={`w-full pl-12 pr-4 py-3.5 rounded-xl border-2 transition-all duration-200 outline-none bg-[#f8fafc] text-[#11357b] font-medium ${
+                              errors.municipio 
+                                ? 'border-red-400 bg-red-50/50' 
+                                : focusedField === 'municipio'
+                                  ? 'border-[#11357b] bg-white shadow-[0_0_0_4px_rgba(17,53,123,0.1)]'
+                                  : 'border-transparent hover:border-[#11357b]/20'
+                            }`}
+                          />
+                        </div>
+                        <AnimatePresence>
+                          {errors.municipio && (
+                            <motion.p
+                              initial={{ opacity: 0, y: -5 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -5 }}
+                              className="text-red-500 text-xs mt-2 flex items-center gap-1"
+                            >
+                              <AlertCircle className="w-3.5 h-3.5" />
+                              {errors.municipio}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+
+                      {/* Número de Despacho */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5, duration: 0.4 }}
                       >
                         <label className="block text-sm font-semibold text-[#11357b] mb-2">
                           Número de Despacho
@@ -436,51 +659,6 @@ export default function LandingPage() {
                             >
                               <AlertCircle className="w-3.5 h-3.5" />
                               {errors.numeroDespacho}
-                            </motion.p>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-
-                      {/* Municipio o Ciudad */}
-                      <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5, duration: 0.4 }}
-                      >
-                        <label className="block text-sm font-semibold text-[#11357b] mb-2">
-                          Municipio o Ciudad
-                        </label>
-                        <div className="relative">
-                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
-                            focusedField === 'municipio' ? 'text-[#11357b]' : 'text-[#11357b]/30'
-                          }`}>
-                            <MapPin className="w-5 h-5" />
-                          </div>
-                          <input
-                            type="text"
-                            value={formData.municipio}
-                            onChange={(e) => handleChange("municipio", e.target.value)}
-                            onFocus={() => setFocusedField('municipio')}
-                            onBlur={() => setFocusedField(null)}
-                            className={`w-full pl-12 pr-4 py-3.5 rounded-xl border-2 transition-all duration-200 outline-none bg-[#f8fafc] text-[#11357b] font-medium ${
-                              errors.municipio 
-                                ? 'border-red-400 bg-red-50/50' 
-                                : focusedField === 'municipio'
-                                  ? 'border-[#11357b] bg-white shadow-[0_0_0_4px_rgba(17,53,123,0.1)]'
-                                  : 'border-transparent hover:border-[#11357b]/20'
-                            }`}
-                          />
-                        </div>
-                        <AnimatePresence>
-                          {errors.municipio && (
-                            <motion.p
-                              initial={{ opacity: 0, y: -5 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -5 }}
-                              className="text-red-500 text-xs mt-2 flex items-center gap-1"
-                            >
-                              <AlertCircle className="w-3.5 h-3.5" />
-                              {errors.municipio}
                             </motion.p>
                           )}
                         </AnimatePresence>
