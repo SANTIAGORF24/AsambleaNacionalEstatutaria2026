@@ -5,7 +5,7 @@ import React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import { CheckCircle2, AlertCircle, User, Hash, MapPin, Calendar, Clock } from "lucide-react"
+import { CheckCircle2, AlertCircle, User, Hash, MapPin, Calendar, Clock, Sun } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 
@@ -21,11 +21,13 @@ export default function LandingPage() {
     nombreCompleto: "",
     numeroDespacho: "",
     municipio: "",
+    asistenciaSabado: "",
   })
   const [errors, setErrors] = useState({
     nombreCompleto: "",
     numeroDespacho: "",
     municipio: "",
+    asistenciaSabado: "",
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -61,6 +63,11 @@ export default function LandingPage() {
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/.test(value)) {
       return "Solo se permiten letras"
     }
+    return ""
+  }
+
+  const validateAsistenciaSabado = (value: string): string => {
+    if (!value) return "Seleccione una opción de asistencia"
     return ""
   }
 
@@ -103,6 +110,7 @@ export default function LandingPage() {
       nombreCompleto: validateNombreCompleto(formData.nombreCompleto),
       numeroDespacho: validateNumeroDespacho(formData.numeroDespacho),
       municipio: validateMunicipio(formData.municipio),
+      asistenciaSabado: validateAsistenciaSabado(formData.asistenciaSabado),
     }
     setErrors(newErrors)
 
@@ -118,6 +126,7 @@ export default function LandingPage() {
               nombre_completo: formData.nombreCompleto,
               numero_despacho: formData.numeroDespacho,
               municipio: formData.municipio,
+              asistencia_sabado: formData.asistenciaSabado,
               fecha_registro: new Date().toISOString()
             }
           ])
@@ -179,7 +188,7 @@ export default function LandingPage() {
                     className="flex justify-center"
                   >
                     <Image
-                      src="/logo-cncu.png"
+                      src="/logooooo.webp"
                       alt="Colegio Nacional de Curadores Urbanos"
                       width={200}
                       height={150}
@@ -296,7 +305,7 @@ export default function LandingPage() {
                     </motion.button>
                     
                     <Image
-                      src="/logo-cncu.png"
+                      src="/logooooo.webp"
                       alt="Colegio Nacional de Curadores Urbanos"
                       width={160}
                       height={120}
@@ -464,6 +473,60 @@ export default function LandingPage() {
                         </AnimatePresence>
                       </motion.div>
 
+                      {/* Asistencia Sábado - Día de Playa */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.55, duration: 0.4 }}
+                      >
+                        <label className="block text-sm font-semibold text-[#11357b] mb-2">
+                          Asistencia - Día de Playa (Sábado 21 de marzo)
+                        </label>
+                        <div className="relative">
+                          <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
+                            focusedField === 'asistenciaSabado' ? 'text-[#11357b]' : 'text-[#11357b]/30'
+                          }`}>
+                            <Sun className="w-5 h-5" />
+                          </div>
+                          <select
+                            value={formData.asistenciaSabado}
+                            onChange={(e) => handleChange("asistenciaSabado", e.target.value)}
+                            onFocus={() => setFocusedField('asistenciaSabado')}
+                            onBlur={() => setFocusedField(null)}
+                            className={`w-full pl-12 pr-4 py-3.5 rounded-xl border-2 transition-all duration-200 outline-none bg-[#f8fafc] text-[#11357b] font-medium appearance-none cursor-pointer ${
+                              errors.asistenciaSabado 
+                                ? 'border-red-400 bg-red-50/50' 
+                                : focusedField === 'asistenciaSabado'
+                                  ? 'border-[#11357b] bg-white shadow-[0_0_0_4px_rgba(17,53,123,0.1)]'
+                                  : 'border-transparent hover:border-[#11357b]/20'
+                            }`}
+                          >
+                            <option value="">Seleccione una opción...</option>
+                            <option value="solo_viernes">Solo asistiré el viernes</option>
+                            <option value="viernes_y_sabado">Asistiré viernes y sábado</option>
+                            <option value="no_asistire">No asistiré al evento</option>
+                          </select>
+                          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg className="w-5 h-5 text-[#11357b]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                        </div>
+                        <AnimatePresence>
+                          {errors.asistenciaSabado && (
+                            <motion.p
+                              initial={{ opacity: 0, y: -5 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -5 }}
+                              className="text-red-500 text-xs mt-2 flex items-center gap-1"
+                            >
+                              <AlertCircle className="w-3.5 h-3.5" />
+                              {errors.asistenciaSabado}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+
                       {/* Submit Button */}
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -558,6 +621,19 @@ export default function LandingPage() {
                       <div>
                         <p className="text-xs text-[#11357b]/50">Municipio</p>
                         <p className="text-sm font-semibold text-[#11357b]">{formData.municipio}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-[#11357b]/10 flex items-center justify-center">
+                        <Sun className="w-4 h-4 text-[#11357b]" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-[#11357b]/50">Asistencia</p>
+                        <p className="text-sm font-semibold text-[#11357b]">
+                          {formData.asistenciaSabado === 'solo_viernes' && 'Solo viernes'}
+                          {formData.asistenciaSabado === 'viernes_y_sabado' && 'Viernes y sábado'}
+                          {formData.asistenciaSabado === 'no_asistire' && 'No asistirá'}
+                        </p>
                       </div>
                     </div>
                   </motion.div>
