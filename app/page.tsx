@@ -219,8 +219,21 @@ export default function LandingPage() {
                       >
                         <Calendar className="w-6 h-6 text-[#11357b]" />
                         <div className="text-left">
-                          <p className="text-sm text-[#11357b]/60 font-medium">Fecha</p>
+                          <p className="text-sm text-[#11357b]/60 font-medium">Asamblea</p>
                           <p className="text-lg font-bold text-[#11357b]">Viernes 20 de marzo</p>
+                        </div>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
+                        transition={{ delay: 0.55, duration: 0.5 }}
+                        className="flex items-center justify-center gap-3"
+                      >
+                        <Sun className="w-6 h-6 text-[#11357b]" />
+                        <div className="text-left">
+                          <p className="text-sm text-[#11357b]/60 font-medium">Integración en la Playa</p>
+                          <p className="text-lg font-bold text-[#11357b]">Sábado 21 de marzo</p>
                         </div>
                       </motion.div>
 
@@ -473,14 +486,14 @@ export default function LandingPage() {
                         </AnimatePresence>
                       </motion.div>
 
-                      {/* Asistencia Sábado - Día de Playa */}
+                      {/* Asistencia Sábado */}
                       <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.55, duration: 0.4 }}
                       >
                         <label className="block text-sm font-semibold text-[#11357b] mb-2">
-                          Asistencia - Día de Playa (Sábado 21 de marzo)
+                          Asistencia
                         </label>
                         <div className="relative">
                           <div className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 ${
