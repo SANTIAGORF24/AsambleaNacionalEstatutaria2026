@@ -363,7 +363,7 @@ export default function LandingPage() {
                           <div className="border-b border-[#11357b]/10 pb-2">
                             <div className="flex justify-between items-start">
                               <div>
-                                <p className="font-semibold text-[#11357b]">Ministerio de Vivienda</p>
+                                <p className="font-semibold text-[#11357b]">Ministerio de Vivienda, ciudad y territorio</p>
                                 <p className="text-[#11357b]/70 text-xs">Dra. Aydee Marqueza Marsiglia Bello</p>
                                 <p className="text-[#11357b]/50 text-xs">Viceministra de Vivienda</p>
                               </div>
