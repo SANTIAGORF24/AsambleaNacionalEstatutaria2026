@@ -328,7 +328,8 @@ export default function LandingPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="px-6 pb-8 max-h-[60vh] overflow-y-auto"
+                  className="px-6 pb-8 overflow-y-auto"
+                  style={{ maxHeight: 'calc(100vh - 200px)' }}
                 >
                   <h2 className="text-2xl font-bold text-[#11357b] text-center mb-6">ORDEN DEL DÍA</h2>
                   
