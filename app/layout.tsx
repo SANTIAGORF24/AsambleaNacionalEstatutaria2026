@@ -35,9 +35,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className="bg-background">
+    <html lang="es" className="bg-background" style={{ colorScheme: 'light' }}>
+      <head>
+        <meta name="color-scheme" content="light only" />
+        <meta name="supported-color-schemes" content="light only" />
+        <meta name="theme-color" content="#ffffff" />
+      </head>
       <body
-        className={`${ibmPlexSans.variable} ${bebasNeue.variable} ${ibmPlexMono.variable} font-sans antialiased overflow-x-hidden`}
+        className={`${ibmPlexSans.variable} ${bebasNeue.variable} ${ibmPlexMono.variable} font-sans antialiased overflow-x-hidden bg-white`}
+        style={{ colorScheme: 'light' }}
       >
         <div className="noise-overlay" aria-hidden="true" />
         <SmoothScroll>{children}</SmoothScroll>

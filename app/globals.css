@@ -3,6 +3,32 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Forzar modo claro - evitar dark mode del sistema */
+:root {
+  color-scheme: light only;
+}
+
+html, body {
+  color-scheme: light only;
+  -webkit-text-fill-color: initial;
+}
+
+/* Deshabilitar ajustes automáticos de color en Safari/Chrome móvil */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: #ffffff !important;
+    color: #11357b !important;
+  }
+  
+  .bg-white {
+    background-color: #ffffff !important;
+  }
+  
+  .bg-gray-50 {
+    background-color: #f9fafb !important;
+  }
+}
+
 /* CNCU Design tokens - white and blue */
 :root {
   --background: #ffffff;
