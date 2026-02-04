@@ -143,7 +143,7 @@ export default function LandingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#11357b] relative overflow-hidden">
+    <main className={`min-h-screen bg-[#11357b] relative ${currentView === 'agenda' ? 'overflow-auto' : 'overflow-hidden'}`}>
       {/* Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] rounded-full bg-white/5" />
@@ -160,8 +160,8 @@ export default function LandingPage() {
         }}
       />
 
-      <div className="relative min-h-screen flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-lg">
+      <div className={`relative px-4 py-8 ${currentView === 'agenda' ? 'min-h-fit' : 'min-h-screen flex items-center justify-center'}`}>
+        <div className={`w-full max-w-lg ${currentView === 'agenda' ? 'mx-auto' : ''}`}>
           {/* Card Container */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -328,8 +328,7 @@ export default function LandingPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="px-6 pb-8 overflow-y-auto"
-                  style={{ maxHeight: 'calc(100vh - 200px)' }}
+                  className="px-6 pb-8"
                 >
                   <h2 className="text-2xl font-bold text-[#11357b] text-center mb-6">ORDEN DEL DÍA</h2>
                   
