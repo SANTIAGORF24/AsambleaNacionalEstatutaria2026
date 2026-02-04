@@ -363,9 +363,9 @@ export default function LandingPage() {
                           <div className="border-b border-[#11357b]/10 pb-2">
                             <div className="flex justify-between items-start">
                               <div>
-                                <p className="font-semibold text-[#11357b]">Min. de Vivienda, Ciudad y Territorio</p>
+                                <p className="font-semibold text-[#11357b]">Ministerio de Vivienda</p>
                                 <p className="text-[#11357b]/70 text-xs">Dra. Aydee Marqueza Marsiglia Bello</p>
-                                <p className="text-[#11357b]/50 text-xs">Viceministra</p>
+                                <p className="text-[#11357b]/50 text-xs">Viceministra de Vivienda</p>
                               </div>
                               <span className="text-[#11357b]/70 font-semibold">8:40 a.m.</span>
                             </div>
@@ -426,7 +426,7 @@ export default function LandingPage() {
                       {/* Almuerzo */}
                       <div className="flex justify-between items-center bg-amber-50 rounded-lg p-3 mt-4">
                         <span className="font-semibold text-[#11357b]">🍽️ Almuerzo de Integración</span>
-                        <span className="text-[#11357b]/70 font-semibold">1:15 p.m.</span>
+                        <span className="text-[#11357b]/70 font-semibold">1:00 p.m.</span>
                       </div>
                       
                       {/* Sección III - Asamblea */}
