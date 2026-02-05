@@ -219,6 +219,18 @@ export default function LandingPage() {
                           <p className="text-lg font-bold text-[#11357b]">Viernes 20 de marzo</p>
                         </div>
                       </motion.div>
+                       <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
+                        transition={{ delay: 0.6, duration: 0.5 }}
+                        className="flex items-center justify-center gap-3"
+                      >
+                        <Clock className="w-6 h-6 text-[#11357b]" />
+                        <div className="text-left">
+                          <p className="text-sm text-[#11357b]/60 font-medium">Horario</p>
+                          <p className="text-lg font-bold text-[#11357b]">8:00 a.m. - 6:00 p.m.</p>
+                        </div>
+                      </motion.div>
 
                       <motion.div
                         initial={{ opacity: 0, x: 20 }}
@@ -233,18 +245,7 @@ export default function LandingPage() {
                         </div>
                       </motion.div>
 
-                      <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: showContent ? 1 : 0, x: showContent ? 0 : 20 }}
-                        transition={{ delay: 0.6, duration: 0.5 }}
-                        className="flex items-center justify-center gap-3"
-                      >
-                        <Clock className="w-6 h-6 text-[#11357b]" />
-                        <div className="text-left">
-                          <p className="text-sm text-[#11357b]/60 font-medium">Horario</p>
-                          <p className="text-lg font-bold text-[#11357b]">8:00 a.m. - 6:00 p.m.</p>
-                        </div>
-                      </motion.div>
+                     
 
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
