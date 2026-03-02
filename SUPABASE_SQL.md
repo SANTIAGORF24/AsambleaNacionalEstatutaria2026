@@ -140,7 +140,34 @@ INSERT INTO auth.users (
 
 ---
 
-## 5. Función de Estadísticas (Opcional)
+## 5. Migración – Nuevos Campos (Script 003)
+
+```sql
+-- Ejecutar el archivo: scripts/003_add_confirmacion_asamblea_poder_sabado.sql
+-- Agrega las siguientes columnas a public.registros:
+
+ALTER TABLE public.registros ADD COLUMN IF NOT EXISTS confirmacion_asistencia TEXT;
+ALTER TABLE public.registros ADD COLUMN IF NOT EXISTS asistencia_asamblea TEXT;
+ALTER TABLE public.registros ADD COLUMN IF NOT EXISTS envia_poder TEXT;
+ALTER TABLE public.registros ADD COLUMN IF NOT EXISTS persona_poder TEXT;
+ALTER TABLE public.registros ADD COLUMN IF NOT EXISTS asistencia_sabado TEXT;
+ALTER TABLE public.registros ADD COLUMN IF NOT EXISTS acompanantes_sabado INTEGER;
+```
+
+### Descripción de campos nuevos
+
+| Campo | Tipo | Valores | Descripción |
+|---|---|---|---|
+| `confirmacion_asistencia` | TEXT | `si` / `no` | Confirma asistencia general a los eventos |
+| `asistencia_asamblea` | TEXT | `si` / `no` | Asistirá a la Asamblea Nacional Estatutaria |
+| `envia_poder` | TEXT | `si` / `no` / NULL | Si no asiste, ¿envía poder? |
+| `persona_poder` | TEXT | nombre / NULL | Nombre de quien recibe el poder (voz y voto) |
+| `asistencia_sabado` | TEXT | `si` / `no` | Asistirá al tour marítimo del sábado |
+| `acompanantes_sabado` | INTEGER | 0+ / NULL | Número de acompañantes (0 = va solo) |
+
+---
+
+## 6. Función de Estadísticas (Opcional)
 
 ```sql
 CREATE OR REPLACE FUNCTION get_registros_stats()
