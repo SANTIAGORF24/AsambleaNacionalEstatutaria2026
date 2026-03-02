@@ -11,7 +11,12 @@ interface Registro {
   nombre_completo: string
   numero_despacho: string
   municipio: string
+  confirmacion_asistencia: string
+  asistencia_asamblea: string
+  envia_poder: string
+  persona_poder: string
   asistencia_sabado: string
+  acompanantes_sabado: number
   fecha_registro: string
 }
 
@@ -111,9 +116,12 @@ export default function LoginPage() {
       'Nombre Completo': registro.nombre_completo,
       'Número de Despacho': registro.numero_despacho,
       'Municipio': registro.municipio,
-      'Asistencia': registro.asistencia_sabado === 'solo_viernes' ? 'Solo viernes' : 
-                    registro.asistencia_sabado === 'viernes_y_sabado' ? 'Viernes y sábado' : 
-                    registro.asistencia_sabado === 'no_asistire' ? 'No asistirá' : registro.asistencia_sabado || 'No especificado',
+      'Conf. Asistencia': registro.confirmacion_asistencia === 'si' ? 'Sí' : registro.confirmacion_asistencia === 'no' ? 'No' : registro.confirmacion_asistencia || 'No especificado',
+      'Asiste a Asamblea': registro.asistencia_asamblea === 'si' ? 'Sí' : registro.asistencia_asamblea === 'no' ? 'No' : registro.asistencia_asamblea || 'No especificado',
+      'Envía Poder': registro.envia_poder === 'si' ? 'Sí' : registro.envia_poder === 'no' ? 'No' : registro.envia_poder || 'N/A',
+      'Persona con Poder': registro.persona_poder || 'N/A',
+      'Asistencia Sábado': registro.asistencia_sabado === 'si' ? 'Sí' : registro.asistencia_sabado === 'no' ? 'No' : registro.asistencia_sabado || 'No especificado',
+      'Acompañantes Sábado': registro.acompanantes_sabado ?? 0,
       'Fecha de Registro': new Date(registro.fecha_registro).toLocaleDateString('es-ES', {
         year: 'numeric',
         month: '2-digit',
@@ -133,7 +141,12 @@ export default function LoginPage() {
       { wch: 30 },  // Nombre
       { wch: 15 },  // Despacho
       { wch: 20 },  // Municipio
-      { wch: 20 },  // Asistencia
+      { wch: 18 },  // Conf. Asistencia
+      { wch: 18 },  // Asiste a Asamblea
+      { wch: 14 },  // Envía Poder
+      { wch: 25 },  // Persona con Poder
+      { wch: 18 },  // Asistencia Sábado
+      { wch: 20 },  // Acompañantes Sábado
       { wch: 20 },  // Fecha
     ]
     ws['!cols'] = colWidths
@@ -318,7 +331,12 @@ export default function LoginPage() {
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Nombre Completo</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Núm. Despacho</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Municipio</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Asistencia</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Conf. Asistencia</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Asiste a Asamblea</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Envía Poder</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Persona con Poder</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Sábado</th>
+                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Acompañantes</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Fecha Registro</th>
                   </tr>
                 </thead>
@@ -346,19 +364,37 @@ export default function LoginPage() {
                         </td>
                         <td className="py-4 px-6">
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            registro.asistencia_sabado === 'viernes_y_sabado' 
-                              ? 'bg-green-100 text-green-800' 
-                              : registro.asistencia_sabado === 'solo_viernes'
-                                ? 'bg-blue-100 text-blue-800'
-                                : registro.asistencia_sabado === 'no_asistire'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-gray-100 text-gray-800'
+                            registro.confirmacion_asistencia === 'si' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                           }`}>
-                            {registro.asistencia_sabado === 'solo_viernes' && 'Solo viernes'}
-                            {registro.asistencia_sabado === 'viernes_y_sabado' && 'Viernes y sábado'}
-                            {registro.asistencia_sabado === 'no_asistire' && 'No asistirá'}
-                            {!registro.asistencia_sabado && 'No especificado'}
+                            {registro.confirmacion_asistencia === 'si' ? 'Sí' : registro.confirmacion_asistencia === 'no' ? 'No' : 'N/A'}
                           </span>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            registro.asistencia_asamblea === 'si' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {registro.asistencia_asamblea === 'si' ? 'Sí' : registro.asistencia_asamblea === 'no' ? 'No' : 'N/A'}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            registro.envia_poder === 'si' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {registro.envia_poder === 'si' ? 'Sí' : registro.envia_poder === 'no' ? 'No' : 'N/A'}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 text-gray-600 text-sm">
+                          {registro.persona_poder || <span className="text-gray-400">—</span>}
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            registro.asistencia_sabado === 'si' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {registro.asistencia_sabado === 'si' ? 'Sí' : registro.asistencia_sabado === 'no' ? 'No' : 'N/A'}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 text-gray-600 text-center">
+                          {registro.asistencia_sabado === 'si' ? (registro.acompanantes_sabado ?? 0) : <span className="text-gray-400">—</span>}
                         </td>
                         <td className="py-4 px-6 text-gray-600">
                           {new Date(registro.fecha_registro).toLocaleDateString('es-ES', {
