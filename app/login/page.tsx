@@ -11,7 +11,6 @@ interface Registro {
   nombre_completo: string
   numero_despacho: string
   municipio: string
-  confirmacion_asistencia: string
   asistencia_asamblea: string
   envia_poder: string
   persona_poder: string
@@ -116,7 +115,6 @@ export default function LoginPage() {
       'Nombre Completo': registro.nombre_completo,
       'Número de Despacho': registro.numero_despacho,
       'Municipio': registro.municipio,
-      'Conf. Asistencia': registro.confirmacion_asistencia === 'si' ? 'Sí' : registro.confirmacion_asistencia === 'no' ? 'No' : registro.confirmacion_asistencia || 'No especificado',
       'Asiste a Asamblea': registro.asistencia_asamblea === 'si' ? 'Sí' : registro.asistencia_asamblea === 'no' ? 'No' : registro.asistencia_asamblea || 'No especificado',
       'Envía Poder': registro.envia_poder === 'si' ? 'Sí' : registro.envia_poder === 'no' ? 'No' : registro.envia_poder || 'N/A',
       'Persona con Poder': registro.persona_poder || 'N/A',
@@ -141,7 +139,6 @@ export default function LoginPage() {
       { wch: 30 },  // Nombre
       { wch: 15 },  // Despacho
       { wch: 20 },  // Municipio
-      { wch: 18 },  // Conf. Asistencia
       { wch: 18 },  // Asiste a Asamblea
       { wch: 14 },  // Envía Poder
       { wch: 25 },  // Persona con Poder
@@ -331,7 +328,6 @@ export default function LoginPage() {
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Nombre Completo</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Núm. Despacho</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Municipio</th>
-                    <th className="text-left py-4 px-6 font-semibold text-gray-800">Conf. Asistencia</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Asiste a Asamblea</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Envía Poder</th>
                     <th className="text-left py-4 px-6 font-semibold text-gray-800">Persona con Poder</th>
@@ -361,13 +357,6 @@ export default function LoginPage() {
                         </td>
                         <td className="py-4 px-6 text-gray-600">
                           {registro.municipio}
-                        </td>
-                        <td className="py-4 px-6">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            registro.confirmacion_asistencia === 'si' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                          }`}>
-                            {registro.confirmacion_asistencia === 'si' ? 'Sí' : registro.confirmacion_asistencia === 'no' ? 'No' : 'N/A'}
-                          </span>
                         </td>
                         <td className="py-4 px-6">
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${

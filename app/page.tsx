@@ -19,22 +19,20 @@ export default function LandingPage() {
     nombreCompleto: "",
     numeroDespacho: "",
     municipio: "",
-    confirmacionAsistencia: "",
     asistenciaAsamblea: "",
-    enviaPoder: "",
     personaPoder: "",
     asistenciaSabado: "",
+    tieneAcompanantes: "",
     acompanantesSabado: "",
   })
   const [errors, setErrors] = useState({
     nombreCompleto: "",
     numeroDespacho: "",
     municipio: "",
-    confirmacionAsistencia: "",
     asistenciaAsamblea: "",
-    enviaPoder: "",
     personaPoder: "",
     asistenciaSabado: "",
+    tieneAcompanantes: "",
     acompanantesSabado: "",
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -75,21 +73,17 @@ export default function LandingPage() {
       }
       v = formatearTexto(value)
     }
-    if (field === 'confirmacionAsistencia') {
-      setFormData(p => ({ ...p, confirmacionAsistencia: v, asistenciaAsamblea: "", enviaPoder: "", personaPoder: "" }))
-      setErrors(p => ({ ...p, confirmacionAsistencia: "" })); return
-    }
     if (field === 'asistenciaAsamblea') {
-      setFormData(p => ({ ...p, asistenciaAsamblea: v, enviaPoder: "", personaPoder: "" }))
+      setFormData(p => ({ ...p, asistenciaAsamblea: v, personaPoder: "" }))
       setErrors(p => ({ ...p, asistenciaAsamblea: "" })); return
     }
-    if (field === 'enviaPoder') {
-      setFormData(p => ({ ...p, enviaPoder: v, personaPoder: "" }))
-      setErrors(p => ({ ...p, enviaPoder: "" })); return
-    }
     if (field === 'asistenciaSabado') {
-      setFormData(p => ({ ...p, asistenciaSabado: v, acompanantesSabado: "" }))
+      setFormData(p => ({ ...p, asistenciaSabado: v, tieneAcompanantes: "", acompanantesSabado: "" }))
       setErrors(p => ({ ...p, asistenciaSabado: "" })); return
+    }
+    if (field === 'tieneAcompanantes') {
+      setFormData(p => ({ ...p, tieneAcompanantes: v, acompanantesSabado: "" }))
+      setErrors(p => ({ ...p, tieneAcompanantes: "" })); return
     }
     setFormData(p => ({ ...p, [field]: v }))
     setErrors(p => ({ ...p, [field]: "" }))
@@ -97,35 +91,34 @@ export default function LandingPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const noAsamblea = formData.asistenciaAsamblea === "no"
-    const conPoder = formData.enviaPoder === "si"
     const conSabado = formData.asistenciaSabado === "si"
+    const conAcompanantes = formData.tieneAcompanantes === "si"
     const newErrors = {
       nombreCompleto: validateNombreCompleto(formData.nombreCompleto),
       numeroDespacho: validateNumeroDespacho(formData.numeroDespacho),
       municipio: validateMunicipio(formData.municipio),
-      confirmacionAsistencia: validateRequired(formData.confirmacionAsistencia, "Seleccione una opción"),
       asistenciaAsamblea: validateRequired(formData.asistenciaAsamblea, "Seleccione una opción"),
-      enviaPoder: noAsamblea ? validateRequired(formData.enviaPoder, "Seleccione una opción") : "",
-      personaPoder: conPoder ? validateRequired(formData.personaPoder, "Indique el nombre de quien recibe el poder") : "",
+      personaPoder: "",
       asistenciaSabado: validateRequired(formData.asistenciaSabado, "Seleccione una opción"),
-      acompanantesSabado: conSabado ? validateRequired(formData.acompanantesSabado, "Indique el número de acompañantes (0 si va solo)") : "",
+      tieneAcompanantes: conSabado ? validateRequired(formData.tieneAcompanantes, "Seleccione una opción") : "",
+      acompanantesSabado: conAcompanantes ? validateRequired(formData.acompanantesSabado, "Indique el número de acompañantes") : "",
     }
     setErrors(newErrors)
     if (Object.values(newErrors).every(e => !e)) {
       setIsSubmitting(true)
       try {
         const supabase = createClient()
+        const noAsamblea = formData.asistenciaAsamblea === "no"
         const { error } = await supabase.from('registros').insert([{
           nombre_completo: formData.nombreCompleto,
           numero_despacho: formData.numeroDespacho,
           municipio: formData.municipio,
-          confirmacion_asistencia: formData.confirmacionAsistencia,
+          confirmacion_asistencia: null,
           asistencia_asamblea: formData.asistenciaAsamblea,
-          envia_poder: noAsamblea ? formData.enviaPoder : null,
-          persona_poder: conPoder ? formData.personaPoder : null,
+          envia_poder: noAsamblea ? (formData.personaPoder ? "si" : "no") : null,
+          persona_poder: noAsamblea && formData.personaPoder ? formData.personaPoder : null,
           asistencia_sabado: formData.asistenciaSabado,
-          acompanantes_sabado: conSabado ? (parseInt(formData.acompanantesSabado) || 0) : null,
+          acompanantes_sabado: conSabado ? (conAcompanantes ? (parseInt(formData.acompanantesSabado) || 0) : 0) : null,
           fecha_registro: new Date().toISOString(),
         }])
         if (error) { console.error(error); toast.error('Error al registrar.', { position: "top-center" }) }
@@ -282,7 +275,7 @@ export default function LandingPage() {
                             <div>
                               <p className="font-semibold text-[#11357b] leading-tight">Instrumentos normativos para el fortalecimiento de la figura del Curador</p>
                               <p className="text-[#11357b]/70 text-xs mt-0.5">Dr. Luis Hair Dueñas Gómez</p>
-                              <p className="text-[#11357b]/50 text-xs">Subdirector de Políticas de Desarrollo Urbano y Territorial – MinVivienda</p>
+                              <p className="text-[#11357b]/50 text-xs">Subdirector de Políticas de Desarrollo Urbano y Territorial, Ministerio de Vivienda, Ciudad y Territorio</p>
                             </div>
                             <span className="text-[#11357b]/70 font-bold shrink-0">9:00 a.m.</span>
                           </div>
@@ -388,54 +381,46 @@ export default function LandingPage() {
                           {/* Nombre */}
                           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3, duration: 0.4 }}>
                             <label className="block text-sm font-semibold text-[#11357b] mb-2 flex items-center gap-2"><User className="w-4 h-4" />Nombre Completo</label>
-                            <input type="text" value={formData.nombreCompleto} onChange={e => handleChange("nombreCompleto", e.target.value)} onFocus={() => setFocusedField('nombreCompleto')} onBlur={() => setFocusedField(null)} placeholder="Ingrese su nombre completo" className={inputCls('nombreCompleto')} />
+                            <input type="text" value={formData.nombreCompleto} onChange={e => handleChange("nombreCompleto", e.target.value)} onFocus={() => setFocusedField('nombreCompleto')} onBlur={() => setFocusedField(null)} className={inputCls('nombreCompleto')} />
                             <ErrMsg f="nombreCompleto" />
                           </motion.div>
 
                           {/* Municipio */}
                           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35, duration: 0.4 }}>
                             <label className="block text-sm font-semibold text-[#11357b] mb-2 flex items-center gap-2"><MapPin className="w-4 h-4" />Municipio o Ciudad</label>
-                            <input type="text" value={formData.municipio} onChange={e => handleChange("municipio", e.target.value)} onFocus={() => setFocusedField('municipio')} onBlur={() => setFocusedField(null)} placeholder="Ciudad donde ejerce" className={inputCls('municipio')} />
+                            <input type="text" value={formData.municipio} onChange={e => handleChange("municipio", e.target.value)} onFocus={() => setFocusedField('municipio')} onBlur={() => setFocusedField(null)} className={inputCls('municipio')} />
                             <ErrMsg f="municipio" />
                           </motion.div>
 
                           {/* Despacho */}
                           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, duration: 0.4 }}>
                             <label className="block text-sm font-semibold text-[#11357b] mb-2 flex items-center gap-2"><Hash className="w-4 h-4" />Número de Despacho</label>
-                            <input type="text" inputMode="numeric" value={formData.numeroDespacho} onChange={e => handleChange("numeroDespacho", e.target.value)} onFocus={() => setFocusedField('numeroDespacho')} onBlur={() => setFocusedField(null)} placeholder="Ej: 12" className={inputCls('numeroDespacho')} />
+                            <input type="text" inputMode="numeric" value={formData.numeroDespacho} onChange={e => handleChange("numeroDespacho", e.target.value)} onFocus={() => setFocusedField('numeroDespacho')} onBlur={() => setFocusedField(null)} className={inputCls('numeroDespacho')} />
                             <ErrMsg f="numeroDespacho" />
                           </motion.div>
 
-                          {/* Sección asistencia */}
+                          {/* Sección asamblea */}
                           <div className="border-t border-[#11357b]/10 pt-1">
-                            <p className="text-xs font-bold text-[#11357b]/40 uppercase tracking-wider mb-3">Confirmación de Asistencia</p>
+                            <p className="text-xs font-bold text-[#11357b]/40 uppercase tracking-wider mb-1">Asamblea Ordinaria Estatutaria</p>
+                            <p className="text-sm font-bold text-[#11357b] mb-3">Viernes 20 de Marzo</p>
                           </div>
 
                           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.45, duration: 0.4 }}>
-                            <RadioGroup field="confirmacionAsistencia" label="¿Confirma su asistencia a los eventos?" opts={[{ v: "si", l: "Sí asisto" }, { v: "no", l: "No asisto" }]} icon={<Calendar className="w-4 h-4" />} />
+                            <RadioGroup field="asistenciaAsamblea" label="¿Confirma su asistencia a la Asamblea Ordinaria Estatutaria?" opts={[{ v: "si", l: "Sí" }, { v: "no", l: "No" }]} icon={<Users className="w-4 h-4" />} />
                           </motion.div>
 
-                          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: 0.4 }}>
-                            <RadioGroup field="asistenciaAsamblea" label="¿Asistirá a la Asamblea Nacional Estatutaria?" opts={[{ v: "si", l: "Sí" }, { v: "no", l: "No" }]} icon={<Users className="w-4 h-4" />} />
-                          </motion.div>
-
-                          {/* Poder (condicional) */}
+                          {/* Poder (condicional cuando NO asiste) */}
                           <AnimatePresence>
                             {formData.asistenciaAsamblea === "no" && (
                               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-4">
-                                  <p className="text-xs font-semibold text-amber-800">Al no asistir a la Asamblea, indique si envía poder para voz y voto.</p>
-                                  <RadioGroup field="enviaPoder" label="¿Envía poder para la Asamblea?" opts={[{ v: "si", l: "Sí envío poder" }, { v: "no", l: "No envío poder" }]} icon={<User className="w-4 h-4" />} bgCard="bg-white" />
-                                  <AnimatePresence>
-                                    {formData.enviaPoder === "si" && (
-                                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                                        <label className="block text-sm font-semibold text-[#11357b] mb-2">¿A quién le otorga el poder (voz y voto)?</label>
-                                        <input type="text" value={formData.personaPoder} onChange={e => handleChange("personaPoder", e.target.value)} onFocus={() => setFocusedField('personaPoder')} onBlur={() => setFocusedField(null)} placeholder="Nombre completo de quien recibe el poder"
-                                          className={`w-full px-4 py-3.5 rounded-xl border-2 transition-all duration-200 outline-none bg-white text-[#11357b] font-medium ${errors.personaPoder ? 'border-red-400' : focusedField === 'personaPoder' ? 'border-[#11357b] shadow-[0_0_0_4px_rgba(17,53,123,0.1)]' : 'border-amber-200 hover:border-[#11357b]/30'}`} />
-                                        <ErrMsg f="personaPoder" />
-                                      </motion.div>
-                                    )}
-                                  </AnimatePresence>
+                                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
+                                  <p className="text-xs text-amber-800 leading-relaxed">En caso de que su respuesta sea NO, por favor indique si otorga poder para ser representado en la Asamblea y, de ser así, indicar el nombre del curador urbano asociado que lo representará con voz y voto.</p>
+                                  <div>
+                                    <label className="block text-sm font-semibold text-[#11357b] mb-2">Nombre del curador urbano asociado:</label>
+                                    <input type="text" value={formData.personaPoder} onChange={e => handleChange("personaPoder", e.target.value)} onFocus={() => setFocusedField('personaPoder')} onBlur={() => setFocusedField(null)}
+                                      className={`w-full px-4 py-3.5 rounded-xl border-2 transition-all duration-200 outline-none bg-white text-[#11357b] font-medium ${errors.personaPoder ? 'border-red-400' : focusedField === 'personaPoder' ? 'border-[#11357b] shadow-[0_0_0_4px_rgba(17,53,123,0.1)]' : 'border-amber-200 hover:border-[#11357b]/30'}`} />
+                                    <ErrMsg f="personaPoder" />
+                                  </div>
                                 </div>
                               </motion.div>
                             )}
@@ -443,23 +428,31 @@ export default function LandingPage() {
 
                           {/* Sección sábado */}
                           <div className="border-t border-[#11357b]/10 pt-1">
-                            <p className="text-xs font-bold text-[#11357b]/40 uppercase tracking-wider mb-3">Actividad Sábado 21 de Marzo</p>
+                            <p className="text-xs font-bold text-[#11357b]/40 uppercase tracking-wider mb-1">Actividad de Integración</p>
+                            <p className="text-sm font-bold text-[#11357b] mb-3">Sábado 21 de Marzo</p>
                           </div>
 
                           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.55, duration: 0.4 }}>
-                            <RadioGroup field="asistenciaSabado" label="¿Asistirá al tour marítimo del sábado?" opts={[{ v: "si", l: "Sí asisto" }, { v: "no", l: "No asisto" }]} icon={<Sun className="w-4 h-4" />} />
+                            <RadioGroup field="asistenciaSabado" label="¿Confirma su asistencia al Tour Marítimo Bahía Concha?" opts={[{ v: "si", l: "Sí" }, { v: "no", l: "No" }]} icon={<Sun className="w-4 h-4" />} />
                           </motion.div>
 
                           {/* Acompañantes (condicional) */}
                           <AnimatePresence>
                             {formData.asistenciaSabado === "si" && (
                               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                                <div className="bg-sky-50 border border-sky-200 rounded-xl p-4">
-                                  <label className="block text-sm font-semibold text-[#11357b] mb-1 flex items-center gap-2"><Users className="w-4 h-4" />¿Cuántos acompañantes lleva?</label>
-                                  <p className="text-xs text-sky-700 mb-3">Acompañantes pagan $165.000 por persona. Ingrese 0 si va solo.</p>
-                                  <input type="text" inputMode="numeric" value={formData.acompanantesSabado} onChange={e => handleChange("acompanantesSabado", e.target.value)} onFocus={() => setFocusedField('acompanantesSabado')} onBlur={() => setFocusedField(null)} placeholder="Número de acompañantes"
-                                    className={`w-full px-4 py-3.5 rounded-xl border-2 transition-all duration-200 outline-none bg-white text-[#11357b] font-medium ${errors.acompanantesSabado ? 'border-red-400' : focusedField === 'acompanantesSabado' ? 'border-[#11357b] shadow-[0_0_0_4px_rgba(17,53,123,0.1)]' : 'border-sky-200 hover:border-[#11357b]/30'}`} />
-                                  <ErrMsg f="acompanantesSabado" />
+                                <div className="bg-sky-50 border border-sky-200 rounded-xl p-4 space-y-4">
+                                  <RadioGroup field="tieneAcompanantes" label="¿Asistirá con acompañantes a la actividad de integración?" opts={[{ v: "si", l: "Sí" }, { v: "no", l: "No" }]} icon={<Users className="w-4 h-4" />} bgCard="bg-white" />
+                                  <AnimatePresence>
+                                    {formData.tieneAcompanantes === "si" && (
+                                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                        <p className="text-xs text-sky-700 mb-2">En caso afirmativo, por favor indique la cantidad de acompañantes:</p>
+                                        <p className="text-xs text-sky-600 mb-2">Acompañantes pagan $165.000 por persona.</p>
+                                        <input type="text" inputMode="numeric" value={formData.acompanantesSabado} onChange={e => handleChange("acompanantesSabado", e.target.value)} onFocus={() => setFocusedField('acompanantesSabado')} onBlur={() => setFocusedField(null)}
+                                          className={`w-full px-4 py-3.5 rounded-xl border-2 transition-all duration-200 outline-none bg-white text-[#11357b] font-medium ${errors.acompanantesSabado ? 'border-red-400' : focusedField === 'acompanantesSabado' ? 'border-[#11357b] shadow-[0_0_0_4px_rgba(17,53,123,0.1)]' : 'border-sky-200 hover:border-[#11357b]/30'}`} />
+                                        <ErrMsg f="acompanantesSabado" />
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
                                 </div>
                               </motion.div>
                             )}
@@ -491,17 +484,11 @@ export default function LandingPage() {
                           { icon: <User className="w-4 h-4 text-[#11357b]" />, label: "Nombre", value: formData.nombreCompleto },
                           { icon: <Hash className="w-4 h-4 text-[#11357b]" />, label: "Despacho", value: formData.numeroDespacho },
                           { icon: <MapPin className="w-4 h-4 text-[#11357b]" />, label: "Municipio", value: formData.municipio },
-                          { icon: <Calendar className="w-4 h-4 text-[#11357b]" />, label: "Asistencia", value: formData.confirmacionAsistencia === "si" ? "Confirma asistencia" : "No asistirá" },
-                          {
-                            icon: <Users className="w-4 h-4 text-[#11357b]" />, label: "Asamblea",
-                            value: formData.asistenciaAsamblea === "si" ? "Asistirá a la Asamblea"
-                              : formData.enviaPoder === "si" ? `No asiste – Poder a: ${formData.personaPoder}`
-                              : "No asiste – Sin poder",
-                          },
+                          { icon: <Calendar className="w-4 h-4 text-[#11357b]" />, label: "Asamblea", value: formData.asistenciaAsamblea === "si" ? "Confirma asistencia a la Asamblea" : formData.personaPoder ? `No asiste – Poder a: ${formData.personaPoder}` : "No asiste – Sin poder" },
                           {
                             icon: <Sun className="w-4 h-4 text-[#11357b]" />, label: "Sábado",
                             value: formData.asistenciaSabado === "si"
-                              ? `Asistirá${parseInt(formData.acompanantesSabado) > 0 ? ` con ${formData.acompanantesSabado} acompañante(s)` : " (sin acompañantes)"}`
+                              ? formData.tieneAcompanantes === "si" ? `Asistirá con ${formData.acompanantesSabado} acompañante(s)` : "Asistirá (sin acompañantes)"
                               : "No asistirá al tour",
                           },
                         ].map((it, i) => (
