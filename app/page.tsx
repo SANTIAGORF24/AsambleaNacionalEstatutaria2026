@@ -20,7 +20,6 @@ export default function LandingPage() {
     numeroDespacho: "",
     municipio: "",
     asistenciaAsamblea: "",
-    personaPoder: "",
     asistenciaSabado: "",
     tieneAcompanantes: "",
     acompanantesSabado: "",
@@ -30,7 +29,6 @@ export default function LandingPage() {
     numeroDespacho: "",
     municipio: "",
     asistenciaAsamblea: "",
-    personaPoder: "",
     asistenciaSabado: "",
     tieneAcompanantes: "",
     acompanantesSabado: "",
@@ -67,14 +65,14 @@ export default function LandingPage() {
       if (!/^\d*$/.test(value)) {
         toast.error("¡Solo se permiten números!", { duration: 2000, position: "top-center" }); return
       }
-    } else if (['nombreCompleto', 'municipio', 'personaPoder'].includes(field)) {
+    } else if (['nombreCompleto', 'municipio'].includes(field)) {
       if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]*$/.test(value)) {
         toast.error("¡Solo se permiten letras!", { duration: 2000, position: "top-center" }); return
       }
       v = formatearTexto(value)
     }
     if (field === 'asistenciaAsamblea') {
-      setFormData(p => ({ ...p, asistenciaAsamblea: v, personaPoder: "" }))
+      setFormData(p => ({ ...p, asistenciaAsamblea: v }))
       setErrors(p => ({ ...p, asistenciaAsamblea: "" })); return
     }
     if (field === 'asistenciaSabado') {
@@ -98,7 +96,6 @@ export default function LandingPage() {
       numeroDespacho: validateNumeroDespacho(formData.numeroDespacho),
       municipio: validateMunicipio(formData.municipio),
       asistenciaAsamblea: validateRequired(formData.asistenciaAsamblea, "Seleccione una opción"),
-      personaPoder: "",
       asistenciaSabado: validateRequired(formData.asistenciaSabado, "Seleccione una opción"),
       tieneAcompanantes: conSabado ? validateRequired(formData.tieneAcompanantes, "Seleccione una opción") : "",
       acompanantesSabado: conAcompanantes ? validateRequired(formData.acompanantesSabado, "Indique el número de acompañantes") : "",
@@ -108,15 +105,14 @@ export default function LandingPage() {
       setIsSubmitting(true)
       try {
         const supabase = createClient()
-        const noAsamblea = formData.asistenciaAsamblea === "no"
         const { error } = await supabase.from('registros').insert([{
           nombre_completo: formData.nombreCompleto,
           numero_despacho: formData.numeroDespacho,
           municipio: formData.municipio,
           confirmacion_asistencia: null,
           asistencia_asamblea: formData.asistenciaAsamblea,
-          envia_poder: noAsamblea ? (formData.personaPoder ? "si" : "no") : null,
-          persona_poder: noAsamblea && formData.personaPoder ? formData.personaPoder : null,
+          envia_poder: null,
+          persona_poder: null,
           asistencia_sabado: formData.asistenciaSabado,
           acompanantes_sabado: conSabado ? (conAcompanantes ? (parseInt(formData.acompanantesSabado) || 0) : 0) : null,
           fecha_registro: new Date().toISOString(),
@@ -409,18 +405,15 @@ export default function LandingPage() {
                             <RadioGroup field="asistenciaAsamblea" label="¿Confirma su asistencia a la Asamblea Ordinaria Estatutaria?" opts={[{ v: "si", l: "Sí" }, { v: "no", l: "No" }]} icon={<Users className="w-4 h-4" />} />
                           </motion.div>
 
-                          {/* Poder (condicional cuando NO asiste) */}
+                          {/* Recordatorio poder (condicional cuando NO asiste) */}
                           <AnimatePresence>
                             {formData.asistenciaAsamblea === "no" && (
                               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
-                                  <p className="text-xs text-amber-800 leading-relaxed">En caso de que su respuesta sea NO, por favor indique si otorga poder para ser representado en la Asamblea y, de ser así, indicar el nombre del curador urbano asociado que lo representará con voz y voto.</p>
-                                  <div>
-                                    <label className="block text-sm font-semibold text-[#11357b] mb-2">Nombre del curador urbano asociado:</label>
-                                    <input type="text" value={formData.personaPoder} onChange={e => handleChange("personaPoder", e.target.value)} onFocus={() => setFocusedField('personaPoder')} onBlur={() => setFocusedField(null)}
-                                      className={`w-full px-4 py-3.5 rounded-xl border-2 transition-all duration-200 outline-none bg-white text-[#11357b] font-medium ${errors.personaPoder ? 'border-red-400' : focusedField === 'personaPoder' ? 'border-[#11357b] shadow-[0_0_0_4px_rgba(17,53,123,0.1)]' : 'border-amber-200 hover:border-[#11357b]/30'}`} />
-                                    <ErrMsg f="personaPoder" />
-                                  </div>
+                                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                                  <p className="text-sm text-amber-800 leading-relaxed">
+                                    Recuerde que debe remitir el poder para ser representado con voz y voto en la Asamblea, al correo electrónico{" "}
+                                    <span className="font-semibold">colegio@curadoresurbanos.org</span>
+                                  </p>
                                 </div>
                               </motion.div>
                             )}
@@ -484,7 +477,7 @@ export default function LandingPage() {
                           { icon: <User className="w-4 h-4 text-[#11357b]" />, label: "Nombre", value: formData.nombreCompleto },
                           { icon: <Hash className="w-4 h-4 text-[#11357b]" />, label: "Despacho", value: formData.numeroDespacho },
                           { icon: <MapPin className="w-4 h-4 text-[#11357b]" />, label: "Municipio", value: formData.municipio },
-                          { icon: <Calendar className="w-4 h-4 text-[#11357b]" />, label: "Asamblea", value: formData.asistenciaAsamblea === "si" ? "Confirma asistencia a la Asamblea" : formData.personaPoder ? `No asiste – Poder a: ${formData.personaPoder}` : "No asiste – Sin poder" },
+                          { icon: <Calendar className="w-4 h-4 text-[#11357b]" />, label: "Asamblea", value: formData.asistenciaAsamblea === "si" ? "Confirma asistencia a la Asamblea" : "No asiste – Enviará poder por correo" },
                           {
                             icon: <Sun className="w-4 h-4 text-[#11357b]" />, label: "Sábado",
                             value: formData.asistenciaSabado === "si"
